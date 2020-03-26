@@ -11,7 +11,7 @@ class MethodCongrualesMultiplicativo:
         self.ACCURACY = accuracy
 
     def get_random(self):
-        a = 1 + (4 * self.k)
+        a = 3 + (8 * self.k)
         m = pow(2, self.g)
 
         x1 = (a * self.xo) % m
