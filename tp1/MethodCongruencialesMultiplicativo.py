@@ -4,10 +4,10 @@ from utils.tools import truncate
 class MethodCongrualesMultiplicativo:
     xo = 0
 
-    def __init__(self, root_number, accuracy):
+    def __init__(self, root_number, k, g, accuracy):
         self.set_xo(root_number)
-        self.k = int(input('Ingrese k: '))
-        self.g = int(input('Ingrese g: '))
+        self.k = k
+        self.g = g
         self.ACCURACY = accuracy
 
     def get_random(self):

@@ -4,11 +4,11 @@ from utils.tools import truncate
 class MethodCongrualesMixto:
     xo = 0
 
-    def __init__(self, root_number, accuracy):
+    def __init__(self, root_number, k, g, c, accuracy):
         self.set_xo(root_number)
-        self.k = int(input('Ingrese k: '))
-        self.g = int(input('Ingrese g: '))
-        self.c = int(input('Ingrese c: '))
+        self.k = k
+        self.g = g
+        self.c = c
         self.ACCURACY = accuracy
 
     def get_random(self):

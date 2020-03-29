@@ -20,9 +20,14 @@ while method_choice not in range(2):
 root_number = int(input('Ingrese número raíz: '))
 
 if method_choice == 0:
-    method = MethodCongrualesMixto(root_number, ACCURACY)
+    k = int(input('Ingrese k: '))
+    g = int(input('Ingrese g: '))
+    c = int(input('Ingrese c: '))
+    method = MethodCongrualesMixto(root_number, k, g, c, ACCURACY)
 elif method_choice == 1:
-    method = MethodCongrualesMultiplicativo(root_number, ACCURACY)
+    k = int(input('Ingrese k: '))
+    g = int(input('Ingrese g: '))
+    method = MethodCongrualesMultiplicativo(root_number, k, g, ACCURACY)
 
 
 for x in range(STARTING_QUANTITY):
