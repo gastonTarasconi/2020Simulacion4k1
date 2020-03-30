@@ -7,11 +7,12 @@ class TestChiCuadrado:
         self.data = data
         self.subintervals = subintervals
         self.accuracy = accuracy
+
         self.freq_observ = {}
         self.freq_esperadas = {}
         self.chi_2 = []
+
         self.labels = []
-        self.key_interval = []
 
     def do_test(self):
         percentil = 1 / self.subintervals
@@ -20,10 +21,11 @@ class TestChiCuadrado:
         for i in range(self.subintervals):
             key_interval = truncate(percentil * i, self.accuracy)
             label_interval = str(key_interval) + ' - ' + str(truncate(key_interval + percentil, self.accuracy))
+
+            self.labels.append((key_interval, label_interval))
+
             self.freq_esperadas[key_interval] = freq_esperada
             self.freq_observ[key_interval] = 0
-            self.labels.append(label_interval)
-            self.key_interval.append(key_interval)
 
         for i in self.data:
             self.freq_observ[truncate(percentil * int(i / percentil), self.accuracy)] += 1

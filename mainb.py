@@ -39,7 +39,7 @@ labels_xls = ('Intervalo', 'Frecuencia Observada', 'Frecuencia Esperada')
 ws.append(labels_xls)
 
 for i in range(len(t.labels)):
-    ws.append((t.labels[i], t.freq_observ[t.key_interval[i]], t.freq_esperadas[t.key_interval[i]]))
+    ws.append((t.labels[i][1], t.freq_observ[t.labels[i][0]], t.freq_esperadas[t.labels[i][0]]))
 
 chart = BarChart()
 chart.type = 'col'
