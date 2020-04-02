@@ -3,9 +3,11 @@ from utils.tools import truncate
 
 class TestChiCuadrado:
 
-    def __init__(self, data, subintervals, accuracy):
+    def __init__(self, data, n, s, accuracy):
         self.data = data
-        self.subintervals = subintervals
+        self.serie = []
+        self.n = n
+        self.subintervals = s
         self.accuracy = accuracy
 
         self.freq_observ = {}
@@ -16,7 +18,7 @@ class TestChiCuadrado:
 
     def do_test(self):
         percentil = 1 / self.subintervals
-        freq_esperada = len(self.data) / self.subintervals
+        freq_esperada = self.n / self.subintervals
 
         for i in range(self.subintervals):
             key_interval = truncate(percentil * i, self.accuracy)
@@ -29,6 +31,7 @@ class TestChiCuadrado:
 
         for i in self.data:
             self.freq_observ[truncate(percentil * int(i / percentil), self.accuracy)] += 1
+            self.serie.append(i)
 
         for i in self.freq_observ:
             self.chi_2.append(truncate(
