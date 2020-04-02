@@ -1,6 +1,10 @@
-# Ejecutar los siguientes comandos
-$ python -m venv ./venv
-$ source ./venv/bin/activate
+### Requerimientos
+* Python Version > 3
 
-$ pip install -r ./requirements.txt
+#### Ejecutar los siguientes comandos
+1. python -m venv ./venv
+2. source ./venv/bin/activate
+3. pip install -r ./requirements.txt
+4. python main.py 
+
 
