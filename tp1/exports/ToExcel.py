@@ -5,9 +5,9 @@ from openpyxl.chart import BarChart, Reference
 class ToExcel:
 
     @staticmethod
-    def create_excel(data):
+    def create_excel(data, filename):
         wb = Workbook(write_only=True)
-        ws = wb.create_sheet()
+        ws = wb.create_sheet('ChiCuadrado')
         max_row = len(data.labels) + 1
 
         labels_xls = ('Intervalo', 'Frecuencia Observada', 'Frecuencia Esperada')
@@ -26,12 +26,16 @@ class ToExcel:
         chart.y_axis.title = 'Frecuencia'
         chart.x_axis.title = 'Intervalo'
 
-        data = Reference(ws, min_col=2, min_row=1, max_row=max_row, max_col=3)
+        chart_data = Reference(ws, min_col=2, min_row=1, max_row=max_row, max_col=3)
         categories = Reference(ws, min_col=1, min_row=2, max_row=max_row)
         chart.x_axis.delete = False
         chart.y_axis.delete = False
-        chart.add_data(data, titles_from_data=True)
+        chart.add_data(chart_data, titles_from_data=True)
         chart.set_categories(categories)
         ws.add_chart(chart, 'E2')
 
-        wb.save('exports/frecuencias_por_intervalo.xlsx')
+        ws2 = wb.create_sheet('Serie', 1)
+        for i in range(len(data.serie)):
+            ws2.append((data.serie[i],))
+
+        wb.save(f'exports/{filename}.xlsx')
