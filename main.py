@@ -12,21 +12,28 @@ from utils.tools import truncate
 from tp1.exports.ToExcel import ToExcel
 from tp1.exports.ToGraph import ToGraph
 
+from tabulate import tabulate
+
 ACCURACY = 4
 
 root = tk.Tk()
 root.title('SIM 4K1 2020 Trabajo práctico N°1')
 # root.geometry('320x125')
 root.geometry('450x100')
+
+
 # root.iconbitmap('favicon.ico')
 
 
-def generar_otro(actual_method, textarea):
-    textarea.insert(tk.END, str(actual_method.get_random()) + '\n')
+def generar_otro(actual_method, textarea, random_numbers):
+    random_number = actual_method.get_random()
+    random_numbers.append([len(random_numbers) + 1, random_number])
+    textarea.delete("1.0", "end")
+    textarea.insert(tk.END, tabulate(random_numbers, ['Iteración (i)', 'Número aleatorio (RND)'], tablefmt="psql"))
     textarea.see(tk.END)
 
 
-def generar20(method, textarea, btn_otro, xo, k, g, c, a, m):
+def generar(method, textarea, btn_otro, xo, k, g, c, a, m, cant_num):
     actual_generator = None
     textarea.delete(1.0, tk.END)
 
@@ -42,6 +49,8 @@ def generar20(method, textarea, btn_otro, xo, k, g, c, a, m):
         a = 0
     if m == '':
         m = 0
+    if cant_num == '':
+        cant_num = 0
 
     if method == 1:
         actual_generator = MethodCongrualesMixto(xo, k, g, c, ACCURACY)
@@ -54,33 +63,85 @@ def generar20(method, textarea, btn_otro, xo, k, g, c, a, m):
     if m != 0:
         actual_generator.m = int(m)
 
-    for i in range(20):
-        textarea.insert(tk.END, str(actual_generator.get_random()) + '\n')
+    cant_num = int(cant_num)
+    random_numbers = []
 
-    btn_otro.configure(command=lambda: generar_otro(actual_generator, textarea))
+    for i in range(cant_num):
+        random_number = actual_generator.get_random()
+        random_numbers.append([i + 1, random_number])
+
+    if btn_otro is not None:
+        btn_otro.configure(command=lambda: generar_otro(actual_generator, textarea, random_numbers))
+
+    # df = pd.DataFrame(random_numbers, indexs, columns=['RND'])
+
+    textarea.insert(tk.END, tabulate(random_numbers, ['Iteración (i)', 'Número aleatorio (RND)'], tablefmt="psql"))
+
+    return random_numbers
 
 
-def get_random_numbers_congruales_mixto(n):
-    # TODO: desde un n y un s, obtener xo k c g para congruales mixto
-    # example
-    # random_numbers = [0.15, 0.22, 0.41, 0.65, 0.84,
-    #                   0.81, 0.62, 0.45, 0.32, 0.07,
-    #                   0.11, 0.29, 0.58, 0.73, 0.93,
-    #                   0.97, 0.79, 0.55, 0.35, 0.09,
-    #                   0.99, 0.51, 0.35, 0.02, 0.19,
-    #                   0.24, 0.98, 0.10, 0.31, 0.17]
-    # subintervals = int(math.sqrt(len(random_numbers)))
+def change(event, row, col, df):
+    # get value from Entry
+    value = event.widget.get()
+    # set value in dataframe
+    df.iloc[row, col] = value
+    print(df)
 
-    # for i in range(n):
-    pass
+
+def get_random_numbers_congruales_mixto(n, s, x0, k, c, g, textarea):
+    xls_name = None
+    random_numbers = None
+
+    if n == '' or s == '':
+        popup('Falta cantidad y de subintervalos')
+        return
+
+    if k == '':
+        popup('Falta parametro k (número entero utilizado para generar constante multiplicativa)')
+        return
+
+    if x0 == '':
+        popup('Falta parametro x0 (semilla)')
+        return
+
+    if g == '':
+        popup('Falta parametro g (número entero utilizado para generar el modulo)')
+        return
+
+    if c == '':
+        popup('Falta parametro c (constante aditiva)')
+        return
+
+    n = int(n)
+    s = int(s)
+    x0 = int(x0)
+    k = int(k)
+    g = int(g)
+    c = int(c)
+
+    xls_name = 'prueba_frecuencia_congruencial_mixto'
+    random_numbers = generar(1, textarea, None, x0, k, g, c, '', '', n)
+
+    t = TestChiCuadrado(random_numbers, n, s, ACCURACY)
+    t.do_test()
+
+    ToExcel.create_excel(t, xls_name)
+
+    topgraph = tk.Toplevel()
+    topgraph.geometry('1024x768')
+    topgraph.title('Gráfico')
+    show_graph(topgraph, t)
+
+    popup('Finalizado!! Ir a la carpeta exports para observar resultados')
 
 
 def get_random_numbers_python(n):
+    # random.random() es la funcion random de python
     for i in range(n):
-        yield truncate(random.random(), ACCURACY)
+        yield i + 1, truncate(random.random(), ACCURACY)
 
 
-def generar_grafico_y_xls(method, n, s):
+def generar_grafico_y_xls(n, s):
     xls_name = None
     random_numbers = None
 
@@ -91,11 +152,8 @@ def generar_grafico_y_xls(method, n, s):
     n = int(n)
     s = int(s)
 
-    if method == 1:
-        xls_name = 'prueba_frecuencia_python'
-        random_numbers = get_random_numbers_python(n)
-    elif method == 2:
-        xls_name = 'prueba_frecuencia_congrual_mixto'
+    xls_name = 'prueba_frecuencia_python'
+    random_numbers = get_random_numbers_python(n)
 
     t = TestChiCuadrado(random_numbers, n, s, ACCURACY)
     t.do_test()
@@ -175,9 +233,9 @@ def open_a():
     btn_otro.grid(row=10, column=3, pady=5)
 
     tk.Button(top, text='Generar 20',
-              command=lambda: generar20(r.get(), textarea, btn_otro,
-                                        xo.get(), k.get(), g.get(),
-                                        c.get(), a.get(), m.get())
+              command=lambda: generar(r.get(), textarea, btn_otro,
+                                      xo.get(), k.get(), g.get(),
+                                      c.get(), a.get(), m.get(), 20)
               ).grid(row=2, column=3, padx=5)
 
 
@@ -195,12 +253,48 @@ def open_b():
     n_subinterv = tk.Entry(top, width=20)
     n_subinterv.grid(row=3, column=2, padx=15, pady=15)
 
-    tk.Button(top, text='Generar Gráfico y Hoja de Cálculo Python',
-              command=lambda: generar_grafico_y_xls(1, n_generar.get(), n_subinterv.get())
+    tk.Button(top, text='Generar Gráfico y Hoja de Cálculo',
+              command=lambda: generar_grafico_y_xls(n_generar.get(), n_subinterv.get())
               ).grid(row=4, column=1, columnspan=2, pady=10)
-    tk.Button(top, text='Generar Gráfico y Hoja de Cálculo Método Congrual Mixto',
-              command=lambda: generar_grafico_y_xls(2, n_generar.get(), n_subinterv.get())
-              ).grid(row=5, column=1, columnspan=2, pady=(0, 10))
+
+
+def open_c():
+    top = tk.Toplevel()
+    top.title('Prueba de Ji-Cuadrada con Método Congruencial Mixto')
+
+    tk.Label(top, text='Número Semilla:').grid(row=2, column=1)
+    xo = tk.Entry(top, width=20)
+    xo.grid(row=2, column=2)
+
+    tk.Label(top, text='Parámetro K:').grid(row=3, column=1)
+    k = tk.Entry(top, width=20)
+    k.grid(row=3, column=2)
+
+    tk.Label(top, text='Parámetro G:').grid(row=4, column=1)
+    g = tk.Entry(top, width=20)
+    g.grid(row=4, column=2)
+
+    tk.Label(top, text='Parámetro C: (Congruales Mixto)').grid(row=5, column=1)
+    c = tk.Entry(top, width=20)
+    c.grid(row=5, column=2)
+
+    tk.Label(top, text='Números a generar:').grid(row=6, column=1)
+    n_generar = tk.Entry(top, width=20)
+    n_generar.grid(row=6, column=2)
+
+    tk.Label(top, text='Cantidad de Subintervalos:').grid(row=7, column=1)  # , padx=15
+    n_subinterv = tk.Entry(top, width=20)
+    n_subinterv.grid(row=7, column=2)  # , padx=15, pady=15
+
+    textarea = tk.Text(top, height=15, width=65)
+    # Read only
+    textarea.bind('<Key>', lambda e: 'break')
+    textarea.grid(row=8, column=1, columnspan=3)
+
+    tk.Button(top, text='Generar Gráfico y Hoja de Cálculo',
+              command=lambda: get_random_numbers_congruales_mixto(n_generar.get(), n_subinterv.get(),
+                                                                  xo.get(), k.get(), c.get(), g.get(), textarea)
+              ).grid(row=6, column=3, padx=5)
 
 
 # def open_c():
@@ -224,7 +318,7 @@ lbl2 = tk.Label(root, text='Gasti')
 
 btn = tk.Button(root, text='Generador Números Pseudos Aleatorios', padx=20, command=open_a).pack(pady=3)
 btn2 = tk.Button(root, text='Prueba en Frecuencia Números Pseudos Aleatorios', padx=20, command=open_b).pack(pady=3)
-
+btn3 = tk.Button(root, text='Prueba de Ji-Cuadrada con Método Congruencial Mixto', padx=20, command=open_c).pack(pady=3)
 
 # lbl.grid(row=0, column=0)
 # lbl2.grid(row=1, column=0)

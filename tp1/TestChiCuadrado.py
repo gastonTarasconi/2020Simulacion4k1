@@ -13,6 +13,7 @@ class TestChiCuadrado:
         self.freq_observ = {}
         self.freq_esperadas = {}
         self.chi_2 = []
+        self.chi_2_ac = []
 
         self.labels = []
 
@@ -28,13 +29,22 @@ class TestChiCuadrado:
 
             self.freq_esperadas[key_interval] = freq_esperada
             self.freq_observ[key_interval] = 0
+            # self.chi_2[key_interval] = 0
 
         for i in self.data:
-            self.freq_observ[truncate(percentil * int(i / percentil), self.accuracy)] += 1
-            self.serie.append(i)
+            key = truncate(percentil * int(i[1] / percentil), self.accuracy)
+            if int(key) == 1:
+                self.freq_observ[truncate(1 - percentil, self.accuracy)] += 1
+            else:
+                self.freq_observ[key] += 1
+            self.serie.append(i[1])
 
         for i in self.freq_observ:
             self.chi_2.append(truncate(
                 (pow(self.freq_observ[i] - self.freq_esperadas[i], 2)) / self.freq_esperadas[i],
                 self.accuracy
             ))
+
+        self.chi_2_ac.append(self.chi_2[0])
+        for i in range(1, len(self.chi_2)):
+            self.chi_2_ac.append(self.chi_2_ac[i - 1] + self.chi_2[i])
