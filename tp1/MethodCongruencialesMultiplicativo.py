@@ -2,6 +2,7 @@ from utils.tools import truncate
 
 
 class MethodCongrualesMultiplicativo:
+    # variable de clase para ir actualizando el xo de acuerdo al x1 obtenido por el metodo
     xo = 0
 
     def __init__(self, root_number, k, g, accuracy):
@@ -13,7 +14,7 @@ class MethodCongrualesMultiplicativo:
         self.ACCURACY = accuracy
 
     def get_random(self):
-        #formula del calculo de x1 del metodo congruencial multiplicativo
+        # formula metodo congruencial multiplicativo
         x1 = (self.a * self.xo) % self.m
         self.set_xo(x1)
         return truncate((x1 / (self.m - 1)), self.ACCURACY)
