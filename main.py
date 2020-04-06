@@ -18,10 +18,7 @@ ACCURACY = 4
 
 root = tk.Tk()
 root.title('SIM 4K1 2020 Trabajo práctico N°1')
-# root.geometry('320x125')
-root.geometry('450x100')
-
-
+root.geometry('450x125')
 # root.iconbitmap('favicon.ico')
 
 
@@ -73,25 +70,12 @@ def generar(method, textarea, btn_otro, xo, k, g, c, a, m, cant_num):
     if btn_otro is not None:
         btn_otro.configure(command=lambda: generar_otro(actual_generator, textarea, random_numbers))
 
-    # df = pd.DataFrame(random_numbers, indexs, columns=['RND'])
-
     textarea.insert(tk.END, tabulate(random_numbers, ['Iteración (i)', 'Número aleatorio (RND)'], tablefmt="psql"))
 
     return random_numbers
 
 
-def change(event, row, col, df):
-    # get value from Entry
-    value = event.widget.get()
-    # set value in dataframe
-    df.iloc[row, col] = value
-    print(df)
-
-
 def get_random_numbers_congruales_mixto(n, s, x0, k, c, g, textarea):
-    xls_name = None
-    random_numbers = None
-
     if n == '' or s == '':
         popup('Falta cantidad y de subintervalos')
         return
@@ -142,9 +126,6 @@ def get_random_numbers_python(n):
 
 
 def generar_grafico_y_xls(n, s):
-    xls_name = None
-    random_numbers = None
-
     if n == '' or s == '':
         popup('Falta cantidad y de subintervalos')
         return
@@ -190,9 +171,7 @@ def show_graph(top, t):
 
 def open_a():
     top = tk.Toplevel()
-    # top.geometry('840x620')
     top.title('Generador de Números PseudoAleatorios')
-    # tk.Button(top, text='Cerrar Ventana', command=top.destroy).grid(row=0, column=9)
 
     r = tk.IntVar()
     r.set(1)
@@ -241,9 +220,7 @@ def open_a():
 
 def open_b():
     top = tk.Toplevel()
-    # top.geometry('840x620')
     top.title('Prueba de Frecuencia Números PseudoAleatorios Python')
-    # tk.Button(top, text='Cerrar Ventana', command=top.destroy).grid(row=0, column=9)
 
     tk.Label(top, text='Números a generar:').grid(row=2, column=1)
     n_generar = tk.Entry(top, width=20)
@@ -297,13 +274,6 @@ def open_c():
               ).grid(row=6, column=3, padx=5)
 
 
-# def open_c():
-#     top = tk.Toplevel()
-#     top.geometry('840x620')
-#     top.title('Prueba de Frecuencia Números PseudoAleatorios Método Congruales Mixto')
-#     tk.Button(top, text='Cerrar Ventana', command=top.destroy).grid(row=0, column=9)
-
-
 def popup(message):
     # showinfo, showwarning, showerror, askquestion, askokcancel, askyesno
     messagebox.showinfo('Title', message)
@@ -312,23 +282,8 @@ def popup(message):
 lbl = tk.Label(root, text='Hello World!')
 lbl2 = tk.Label(root, text='Gasti')
 
-# btn = tk.Button(root, text='Números Pseudos aleatorios', padx=20, command=open_a).pack(pady=3)
-# btn2 = tk.Button(root, text='Prueba en Frecuencia Python', padx=20, command=open_b).pack(pady=3)
-# btn3 = tk.Button(root, text='Prueba Frecuencia Congruales Mixto', padx=20, command=open_c).pack(pady=3)
-
 btn = tk.Button(root, text='Generador Números Pseudos Aleatorios', padx=20, command=open_a).pack(pady=3)
 btn2 = tk.Button(root, text='Prueba en Frecuencia Números Pseudos Aleatorios', padx=20, command=open_b).pack(pady=3)
 btn3 = tk.Button(root, text='Prueba de Ji-Cuadrada con Método Congruencial Mixto', padx=20, command=open_c).pack(pady=3)
-
-# lbl.grid(row=0, column=0)
-# lbl2.grid(row=1, column=0)
-# btn.grid(row=0, column=1)
-# btn2.grid(row=1, column=1, pady=3, sticky=W+E)
-#
-# btn.grid(pady=3)
-# btn2.grid(pady=3)
-# btn3.pack(pady=3)
-
-# popup()
 
 root.mainloop()

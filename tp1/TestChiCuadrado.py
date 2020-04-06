@@ -29,7 +29,6 @@ class TestChiCuadrado:
 
             self.freq_esperadas[key_interval] = freq_esperada
             self.freq_observ[key_interval] = 0
-            # self.chi_2[key_interval] = 0
 
         for i in self.data:
             key = truncate(percentil * int(i[1] / percentil), self.accuracy)
