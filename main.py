@@ -138,7 +138,7 @@ def get_random_numbers_congruales_mixto(n, s, x0, k, c, g, textarea):
 def get_random_numbers_python(n):
     # random.random() es la funcion random de python
     for i in range(n):
-        yield [i + 1, truncate(random.random(), ACCURACY)]
+        yield i + 1, truncate(random.random(), ACCURACY)
 
 
 def generar_grafico_y_xls(n, s):

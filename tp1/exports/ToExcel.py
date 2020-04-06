@@ -33,7 +33,7 @@ class ToExcel:
         chart.y_axis.delete = False
         chart.add_data(chart_data, titles_from_data=True)
         chart.set_categories(categories)
-        ws.add_chart(chart, 'E2')
+        ws.add_chart(chart, 'I2')
 
         ws2 = wb.create_sheet('Serie', 1)
         for i in range(len(data.serie)):
