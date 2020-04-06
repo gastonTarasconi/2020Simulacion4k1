@@ -32,10 +32,11 @@ class TestChiCuadrado:
             # self.chi_2[key_interval] = 0
 
         for i in self.data:
-            if i[1] == 1:
-                self.freq_observ[1 - percentil] += 1
+            key = truncate(percentil * int(i[1] / percentil), self.accuracy)
+            if int(key) == 1:
+                self.freq_observ[truncate(1 - percentil, self.accuracy)] += 1
             else:
-                self.freq_observ[truncate(percentil * int(i[1] / percentil), self.accuracy)] += 1
+                self.freq_observ[key] += 1
             self.serie.append(i[1])
 
         for i in self.freq_observ:
