@@ -50,6 +50,12 @@ class TestChiCuadrado:
                     writer.writerows(map(lambda x: [x], write_csv))
                     write_csv.clear()
 
+        # agrego los que faltaron, si no llego a 1000 registros
+        with open(csv_filename, 'a') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(map(lambda x: [x], write_csv))
+            write_csv.clear()
+
         ac = 0.0
         for i in self.freq_observ:
             chi_2 = truncate(
