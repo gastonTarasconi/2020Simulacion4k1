@@ -10,12 +10,13 @@ class ToExcel:
         ws = wb.create_sheet('ChiCuadrado')
         max_row = len(data.labels) + 1
 
-        labels_xls = ('Intervalo', 'Frecuencia Observada', 'Frecuencia Esperada')
+        labels_xls = ('Intervalo', 'Frecuencia Observada', 'Frecuencia Esperada', 'Estadístico de prueba (C)',
+                      'Estadístico de prueba acumulado (CA)')
         ws.append(labels_xls)
 
         for i in range(len(data.labels)):
             ws.append((data.labels[i][1], data.freq_observ[data.labels[i][0]],
-                       data.freq_esperadas[data.labels[i][0]]))
+                       data.freq_esperadas[data.labels[i][0]], data.chi_2[i], data.chi_2_ac[i]))
 
         chart = BarChart()
         chart.type = 'col'

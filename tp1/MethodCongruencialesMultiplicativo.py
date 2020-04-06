@@ -13,6 +13,7 @@ class MethodCongrualesMultiplicativo:
         self.ACCURACY = accuracy
 
     def get_random(self):
+        #formula del calculo de x1 del metodo congruencial multiplicativo
         x1 = (self.a * self.xo) % self.m
         self.set_xo(x1)
         return truncate((x1 / (self.m - 1)), self.ACCURACY)
