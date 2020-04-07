@@ -1,11 +1,10 @@
 from utils.tools import truncate
-
+import csv
 
 class TestChiCuadrado:
 
     def __init__(self, data, n, s, accuracy):
         self.data = data
-        self.serie = []
         self.n = n
         self.subintervals = s
         self.accuracy = accuracy
@@ -21,6 +20,11 @@ class TestChiCuadrado:
         percentil = 1 / self.subintervals
         freq_esperada = self.n / self.subintervals
 
+        # creo archivo si no existe, borro lo que ya estaba
+        csv_filename = 'exports/data.csv'
+        f = open(csv_filename, 'w+')
+        f.close()
+
         for i in range(self.subintervals):
             key_interval = truncate(percentil * i, self.accuracy)
             label_interval = str(key_interval) + ' - ' + str(truncate(key_interval + percentil, self.accuracy))
@@ -30,20 +34,29 @@ class TestChiCuadrado:
             self.freq_esperadas[key_interval] = freq_esperada
             self.freq_observ[key_interval] = 0
 
+        write_csv = []
         for i in self.data:
             key = truncate(percentil * int(i[1] / percentil), self.accuracy)
             if int(key) == 1:
                 self.freq_observ[truncate(1 - percentil, self.accuracy)] += 1
             else:
                 self.freq_observ[key] += 1
-            self.serie.append(i[1])
 
+            # guardo la serie en un csv cada 1000 registros
+            write_csv.append(i[1])
+            if len(write_csv) == 1000:
+                with open(csv_filename, 'a') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerows(map(lambda x: [x], write_csv))
+                    write_csv.clear()
+
+        ac = 0.0
         for i in self.freq_observ:
-            self.chi_2.append(truncate(
+            chi_2 = truncate(
                 (pow(self.freq_observ[i] - self.freq_esperadas[i], 2)) / self.freq_esperadas[i],
                 self.accuracy
-            ))
+            )
+            self.chi_2.append(chi_2)
 
-        self.chi_2_ac.append(self.chi_2[0])
-        for i in range(1, len(self.chi_2)):
-            self.chi_2_ac.append(self.chi_2_ac[i - 1] + self.chi_2[i])
+            ac += chi_2
+            self.chi_2_ac.append(ac)

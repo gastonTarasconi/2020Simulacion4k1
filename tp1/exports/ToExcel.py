@@ -35,8 +35,4 @@ class ToExcel:
         chart.set_categories(categories)
         ws.add_chart(chart, 'I2')
 
-        ws2 = wb.create_sheet('Serie', 1)
-        for i in range(len(data.serie)):
-            ws2.append((data.serie[i],))
-
         wb.save(f'exports/{filename}.xlsx')
