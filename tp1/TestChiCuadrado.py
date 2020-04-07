@@ -51,10 +51,11 @@ class TestChiCuadrado:
                     write_csv.clear()
 
         # agrego los que faltaron, si no llego a 1000 registros
-        with open(csv_filename, 'a') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerows(map(lambda x: [x], write_csv))
-            write_csv.clear()
+        if len(write_csv) > 0:
+            with open(csv_filename, 'a') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerows(map(lambda x: [x], write_csv))
+                write_csv.clear()
 
         ac = 0.0
         for i in self.freq_observ:
