@@ -63,8 +63,8 @@ class TestChiCuadradoTp2:
             else:
                 freq_esp = self.freq_esperadas[int(i[0])]
                 freq_obs = self.freq_observ[int(i[0])][1]
-            # if freq_esp == 0:
-            #     freq_esp = 1
+            if freq_esp == 0:
+                freq_esp = 1
 
             chi_2 = truncate(
                 (pow(freq_obs - freq_esp, 2)) / freq_esp,
