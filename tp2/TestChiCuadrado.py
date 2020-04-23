@@ -21,8 +21,6 @@ class TestChiCuadradoTp2:
         self.labels = []
 
     def do_test(self,  lim_inf, lim_sup, _type, intervals):
-        # para que incluya al ultimo, al final si es el ultimo lo considero con k-1
-        lim_sup += 1
 
         interval_size = truncate((lim_sup - lim_inf) / intervals, self.accuracy)
 
@@ -37,15 +35,12 @@ class TestChiCuadradoTp2:
             self.labels.append((k, k_prox))
 
         for i in self.data:
-            k = int((float(i) - lim_inf) / interval_size)
+            k = int((i - lim_inf) // interval_size)
 
-            #TODO: no se porque hacer esto, si ya le habia sumado uno al lim sup, no entiendo por que es necesario
-            # si es el ultimo, lo agrego al final
             if k == intervals:
                 self.freq_observ[k-1] += 1
             else:
                 self.freq_observ[k] += 1
-            # self.freq_observ[k] += 1
 
         self.freq_esperadas = self.get_frecuencia_esperada(_type, self.labels)
 
