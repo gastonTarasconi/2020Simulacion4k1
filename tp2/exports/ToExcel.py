@@ -14,12 +14,20 @@ class ToExcel:
                       'Estadístico de prueba acumulado (CA)')
         ws.append(labels_xls)
 
-        for i in range(len(data.labels)):
-            ws.append((str(data.labels[i][0]) + ' - ' + str(data.labels[i][1]),
-                       data.freq_observ[i],
-                       data.freq_esperadas[i],
-                       data.chi_2[i],
-                       data.chi_2_ac[i]))
+        if type(data.freq_observ[0]) is tuple:
+            for i in range(len(data.labels)):
+                ws.append((str(data.labels[i][0][0]),
+                           data.freq_observ[i][1],
+                           data.freq_esperadas[i],
+                           data.chi_2[i],
+                           data.chi_2_ac[i]))
+        else:
+            for i in range(len(data.labels)):
+                ws.append((str(data.labels[i][0]) + ' - ' + str(data.labels[i][1]),
+                           data.freq_observ[i],
+                           data.freq_esperadas[i],
+                           data.chi_2[i],
+                           data.chi_2_ac[i]))
 
         chart = BarChart()
         chart.type = 'col'

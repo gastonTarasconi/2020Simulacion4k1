@@ -9,7 +9,7 @@ class FreqEspPoisson:
 
     def ordenarYcompletarSerie(self, serieSinRepeticiones):
         serieOrdenadaCompleta = []
-        for i in range(0, len(serieSinRepeticiones) + 1):
+        for i in range(0, len(serieSinRepeticiones)):
             serieOrdenadaCompleta.append(int(min(serieSinRepeticiones)) + i)
         return serieOrdenadaCompleta
 
