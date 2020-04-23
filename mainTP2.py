@@ -13,7 +13,8 @@ filename = 'data.txt'
 xls_name = 'test_chi2_' + filename
 
 with open(filename, 'r') as f:
-    random_numbers = f.readline().split(';')
+    line = f.readline().split(';')
+    random_numbers = [float(i) for i in line]
     _type = int(f.readline())
     intervals = int(f.readline())
     lim_inf = float(min(random_numbers))
