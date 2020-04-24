@@ -1,8 +1,8 @@
 import math
-from utils.tools import truncate
+from utils.truncate import truncate
 
 
-class FreqEspPoisson:
+class Poisson:
     '''
     ordena la serie de menor a mayor y completa
     los numero que falten entre el min y el max de la serie '''
@@ -20,7 +20,7 @@ class FreqEspPoisson:
             lambdaa = round(acumulador / len(serie))
         return lambdaa
 
-    def get_frecuencia_esperada(self, serieEntera, intervalo):
+    def get_frecuencia_esperada(self, serieEntera):
         # eliminamos las repeticiones de la serie, pero sigue desordenada e incompleta
         serieSinRepeticiones = set(serieEntera)
         # la serie final es la que ya esta ordenada, completa y sin repeticiones
