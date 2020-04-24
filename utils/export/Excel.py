@@ -1,5 +1,6 @@
 from openpyxl import Workbook
 from openpyxl.chart import BarChart, Reference
+from openpyxl.drawing.image import Image
 
 
 class Excel:
@@ -16,6 +17,9 @@ class Excel:
         self._do_chi_square_table(ws, _type, labels, observed_frequency, expected_frequency, chi_2, chi_2_ac)
 
         self._do_chi_square_graph(ws, 'Prueba Chi Cuadrado', 'Frecuencia', 'Intervalo', labels)
+
+        self._put_chi_square_table(ws)
+
         wb.save(self.filename)
 
     def _do_chi_square_table(self, ws, _type, labels, observed_frequencies, expected_frequencies, chi_2, chi_2_ac):
@@ -47,3 +51,8 @@ class Excel:
         chart.add_data(chart_data, titles_from_data=True)
         chart.set_categories(categories)
         ws.add_chart(chart, 'I2')
+
+    def _put_chi_square_table(self, ws):
+        img = Image('utils/probabilistic_tables/chi_square_table.png')
+        img.anchor = 'I42'
+        ws.add_image(img)
