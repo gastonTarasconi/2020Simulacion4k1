@@ -26,11 +26,14 @@ class ChiSquareTest:
         temp = {}
         for i in self.observed_frequency:
             temp[int(i[0])] = i[1]
-            self.labels.append(int(i[0]))
+            # cambio, es necesario int(i[0])
+            self.labels.append([i[0], i[0]])
         self.observed_frequency = temp
 
         calculator = Poisson()
         self.expected_frequency = calculator.get_frecuencia_esperada(self.data)
+
+        self.join_expected_frequencies()
 
         self._do_formula()
 
@@ -62,19 +65,83 @@ class ChiSquareTest:
         elif _type == 2:
             self.expected_frequency = Normal.get_expected_frequencies(self.data, self.labels)
 
+        self.join_expected_frequencies()
+
         self._do_formula()
 
     def join_expected_frequencies(self):
-        pass
+        expected_freq = []
+        observed_freq = []
+        labels = []
+
+        length = len(self.expected_frequency)
+        i = 0
+        while i < length:
+            temp_esp = 0
+            temp_obs = 0
+            temp_lab = []
+
+            if self.expected_frequency[i] < 5:
+                temp_index = i + 1
+
+                if temp_index < length:
+                    temp_esp = self.expected_frequency[i] + self.expected_frequency[temp_index]
+                    temp_obs = list(self.observed_frequency.values())[i] + list(self.observed_frequency.values())[
+                        temp_index]
+                    temp_lab = [self.labels[i][0], self.labels[temp_index][1]]
+                else:
+                    expected_freq[len(expected_freq) - 1] += self.expected_frequency[i]
+                    observed_freq[len(observed_freq) - 1] += list(self.observed_frequency.values())[i]
+                    labels[len(labels) - 1] = [labels[len(labels) - 1][0], self.labels[i][1]]
+                    break
+
+                while temp_esp < 5:
+                    temp_index += 1
+                    if temp_index < length:
+                        temp_esp += self.expected_frequency[temp_index]
+                        temp_obs += list(self.observed_frequency.values())[temp_index]
+                        temp_lab = [temp_lab[0], self.labels[temp_index][1]]
+                    else:
+                        expected_freq[len(expected_freq) - 1] += temp_esp
+                        observed_freq[len(observed_freq) - 1] += temp_obs
+                        labels[len(labels) - 1] = [labels[len(labels) - 1][0], temp_lab[1]]
+                        break
+
+                i = temp_index + 1
+                if temp_index == length:
+                    continue
+
+                expected_freq.append(temp_esp)
+                observed_freq.append(temp_obs)
+                labels.append(temp_lab)
+
+            else:
+                expected_freq.append(self.expected_frequency[i])
+                observed_freq.append(list(self.observed_frequency.values())[i])
+                labels.append(self.labels[i])
+                i += 1
+        print(self.expected_frequency)
+        print(expected_freq)
+        print()
+        print(self.observed_frequency)
+        print(observed_freq)
+        print()
+        print(self.labels)
+        print(labels)
+
+        self.expected_frequency = expected_freq
+        self.observed_frequency = observed_freq
+        self.labels = labels
 
     def join_expected_frequencies_poisson(self):
         pass
 
     def _do_formula(self):
         ac = 0.0
-        for i in self.observed_frequency:
-            freq_esp = self.expected_frequency[int(i)]
-            freq_obs = self.observed_frequency[int(i)]
+        for i in range(len(self.observed_frequency)):
+            # int(i) es necesario?
+            freq_esp = self.expected_frequency[i]
+            freq_obs = self.observed_frequency[i]
             chi_2 = truncate(
                 (pow(freq_obs - freq_esp, 2)) / freq_esp,
                 self.accuracy

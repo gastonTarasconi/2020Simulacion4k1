@@ -25,12 +25,16 @@ class Excel:
     def _do_chi_square_table(self, ws, _type, labels, observed_frequencies, expected_frequencies, chi_2, chi_2_ac):
         n_intervals = len(labels)
         for i in range(n_intervals):
-            label = str(labels[i]) if _type == 3 else str(labels[i][0]) + ' - ' + str(labels[i][1])
+            label = str(labels[i][0]) + ' - ' + str(labels[i][1]) if (
+                    _type != 3) else str(int(labels[i][0])) + ' - ' + str(int(labels[i][1])) if labels[i][0] != \
+                                                                                                labels[i][1] else str(
+                int(labels[i][0]))
+
             ws.append((label,
-                      observed_frequencies[i],
-                      expected_frequencies[i],
-                      chi_2[i],
-                      chi_2_ac[i]))
+                       observed_frequencies[i],
+                       expected_frequencies[i],
+                       chi_2[i],
+                       chi_2_ac[i]))
             # ws.append((label, observed_frequency, expected_frequencies[i], chi_2[i], chi_2_ac[i]))
 
     def _do_chi_square_graph(self, ws, title, y_axis, x_axis, labels):
